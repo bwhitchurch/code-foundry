@@ -10,6 +10,7 @@ dependencies = [
     { name = "opencv-python" },
     { name = "pillow" },
     { name = "qrcode", extra = ["pil"] },
+    { name = "ttkthemes" },
 ]
 
 [package.dev-dependencies]
@@ -23,6 +24,7 @@ requires-dist = [
     { name = "opencv-python", specifier = ">=4.13.0.90" },
     { name = "pillow", specifier = ">=12.1.0" },
     { name = "qrcode", extras = ["pil"], specifier = ">=8.2" },
+    { name = "ttkthemes", specifier = ">=3.3.0" },
 ]
 
 [package.metadata.requires-dev]
@@ -231,6 +233,15 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/c2/55/6384b0b8ce731b6e2ade2b5449bf07c0e4c31e8a2e68ea65b3bafadcecc5/ruff-0.14.13-py3-none-win_amd64.whl", hash = "sha256:6070bd026e409734b9257e03e3ef18c6e1a216f0435c6751d7a8ec69cb59abef", size = 14097887, upload-time = "2026-01-15T20:15:01.48Z" },
     { url = "https://files.pythonhosted.org/packages/4d/e1/7348090988095e4e39560cfc2f7555b1b2a7357deba19167b600fdf5215d/ruff-0.14.13-py3-none-win_arm64.whl", hash = "sha256:7ab819e14f1ad9fe39f246cfcc435880ef7a9390d81a2b6ac7e01039083dd247", size = 13080224, upload-time = "2026-01-15T20:14:45.853Z" },
 ]
+
+[[package]]
+name = "ttkthemes"
+version = "3.3.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "pillow" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/49/ad/675d46fb613b80c2e0d1b195df1991a76ff42c8b5481d1c5730418945c0b/ttkthemes-3.3.0.tar.gz", hash = "sha256:a0b74087aa3bfa2ef159599376642f288d5c624073c6aaceb4d16359de0851b6", size = 891050, upload-time = "2025-11-09T12:18:10.813Z" }
 
 [[package]]
 name = "typing-extensions"

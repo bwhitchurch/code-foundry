@@ -8,6 +8,7 @@ dependencies = [
     "opencv-python>=4.13.0.90",
     "pillow>=12.1.0",
     "qrcode[pil]>=8.2",
+    "ttkthemes>=3.3.0",
 ]
 
 [dependency-groups]
