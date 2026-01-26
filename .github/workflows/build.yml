@@ -29,20 +29,58 @@ jobs:
       - name: Sync deps
         run: uv sync
 
-      - name: Build with PyInstaller
+      ### Build Steps Per OS ###
+      - name: Build (Linux)
+        if: runner.os == 'Linux'
         shell: bash
         run: |
-          uv run pyinstaller \
-            --noconsole \
-            --onefile \
-            --name CodeFoundry \
-            main.py
+          uv run pyinstaller --onefile --name CodeFoundry main.py
+
+      - name: Build (MacOS)
+        if: runner.os == 'macOS'
+        shell: bash
+        run: |
+          uv run pyinstaller --windowed --name CodeFoundry main.py
+
+      - name: Build (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          uv run pyinstaller --noconsole --onefile --name CodeFoundry.exe main.py
+
+      # -------------------------
+      # Package into ONE zip (per OS)
+      # -------------------------
+      - name: Package (Windows zip)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path out | Out-Null
+          Compress-Archive -Force -Path dist\CodeFoundry.exe -DestinationPath out\CodeFoundry-windows.zip
+
+      - name: Package (macOS zip .app)
+        if: runner.os == 'macOS'
+        shell: bash
+        run: |
+          mkdir -p out
+          # Zip the .app bundle correctly
+          ditto -c -k --sequesterRsrc --keepParent "dist/CodeFoundry.app" "out/CodeFoundry-macos.zip"
+
+      - name: Package (Linux zip)
+        if: runner.os == 'Linux'
+        shell: bash
+        run: |
+          mkdir -p out
+          tar -czf "out/CodeFoundry-linux.tar.gz" "dist/CodeFoundry"
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: CodeFoundry-${{ matrix.os }}
-          path: dist/*
+          name: CodeFoundry-${{ runner.os }}
+          path: |
+            out/*.zip
+            out/*.tar.gz
+          if-no-files-found: error
 
   release:
     runs-on: ubuntu-latest
@@ -57,4 +95,5 @@ jobs:
       - name: Create Release + upload assets
         uses: softprops/action-gh-release@v2
         with:
-          files: out/**/*
+          files: out/**/CodeFoundry-*
+          draft: true
