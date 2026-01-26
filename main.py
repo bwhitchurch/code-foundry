@@ -89,6 +89,14 @@ def add_center_logo(
     """
     base = qr_img.convert("RGBA")
     logo = Image.open(logo_path).convert("RGBA")
+    print(f"Adding logo of size {logo_scale}")
+
+    def hex_to_rgbabg(hex_color: str, alpha: int = 255) -> tuple[int, int, int, int]:
+        hex_color = hex_color.lstrip("#")
+        r = int(hex_color[0:2], 16)
+        g = int(hex_color[2:4], 16)
+        b = int(hex_color[4:6], 16)
+        return (r, g, b, alpha)
 
     W, H = base.size
     logo_w = max(1, int(W * logo_scale))
@@ -109,10 +117,10 @@ def add_center_logo(
 
     overlay = Image.new("RGBA", base.size, (0, 0, 0, 0))
     draw = ImageDraw.Draw(overlay)
-    draw.rounded_rectangle([x0, y0, x1, y1], radius=rr, fill=bg)
+    draw.rounded_rectangle([x0, y0, x1, y1], radius=rr, fill=hex_to_rgbabg(bg, 255))
 
     base = Image.alpha_composite(base, overlay)
-    base.paste(logo, (x0 + pad, y0 + pad), mask=logo)
+    base.paste(logo, (x0 + pad, y0 + pad))
 
     return base.convert("RGB")
 
@@ -432,8 +440,9 @@ class CodeFoundryApp(ThemedTk):
         logo = self.logo_path.get().strip()
         if logo:
             try:
+                print("Adding logo:", logo)
                 img = add_center_logo(
-                    img, logo, logo_scale=self.logo_scale_var.get() / 100.0
+                    img, logo, bg, logo_scale=self.logo_scale_var.get() / 100.0
                 )
             except Exception as e:
                 self._set_status(f"Logo load/overlay failed: {e}", "warn")
