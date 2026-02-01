@@ -40,7 +40,7 @@ jobs:
         if: runner.os == 'macOS'
         shell: bash
         run: |
-          uv run pyinstaller --windowed --name CodeFoundry --target-arch universal2main.py
+          uv run pyinstaller --windowed --name CodeFoundry --target-arch universal2 main.py
 
       - name: Build (Windows)
         if: runner.os == 'Windows'
