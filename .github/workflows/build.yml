@@ -13,7 +13,7 @@ jobs:
   build:
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        os: [ubuntu-latest, windows-latest, macos-latest, macos-latest-arm]
     runs-on: ${{ matrix.os }}
 
     steps:
@@ -40,7 +40,7 @@ jobs:
         if: runner.os == 'macOS'
         shell: bash
         run: |
-          uv run pyinstaller --windowed --name CodeFoundry --target-arch universal2 main.py
+          uv run pyinstaller --windowed --name CodeFoundry --target-arch main.py
 
       - name: Build (Windows)
         if: runner.os == 'Windows'
@@ -76,7 +76,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: CodeFoundry-${{ runner.os }}
+          name: CodeFoundry-${{ runner.os }}-${{ runner.arch }}
           path: |
             out/*.zip
             out/*.tar.gz
