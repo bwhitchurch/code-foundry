@@ -46,7 +46,7 @@ jobs:
         if: runner.os == 'Windows'
         shell: pwsh
         run: |
-          uv run pyinstaller --noconsole --onefile --name CodeFoundry.exe main.py
+          uv run pyinstaller --noconsole --onefile --name CodeFoundry main.py
 
       # -------------------------
       # Package into ONE zip (per OS)
@@ -56,7 +56,7 @@ jobs:
         shell: pwsh
         run: |
           New-Item -ItemType Directory -Force -Path out | Out-Null
-          Compress-Archive -Force -Path dist\CodeFoundry.exe -DestinationPath out\CodeFoundry-windows.zip
+          Compress-Archive -Force -Path dist\CodeFoundry.exe -DestinationPath out\CodeFoundry-${{ runner.os }}-${{ runner.arch }}.zip
 
       - name: Package (macOS zip .app)
         if: runner.os == 'macOS'
@@ -64,14 +64,14 @@ jobs:
         run: |
           mkdir -p out
           # Zip the .app bundle correctly
-          ditto -c -k --sequesterRsrc --keepParent "dist/CodeFoundry.app" "out/CodeFoundry-macos.zip"
+          ditto -c -k --sequesterRsrc --keepParent "dist/CodeFoundry.app" "out/CodeFoundry-${{ runner.os }}-${{ runner.arch }}.zip"
 
       - name: Package (Linux zip)
         if: runner.os == 'Linux'
         shell: bash
         run: |
           mkdir -p out
-          tar -czf "out/CodeFoundry-linux.tar.gz" "dist/CodeFoundry"
+          tar -czf "out/CodeFoundry-${{ runner.os }}-${{ runner.arch }}.tar.gz" "dist/CodeFoundry"
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
